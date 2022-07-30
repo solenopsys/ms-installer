@@ -6,9 +6,9 @@ configmap:
   name: "helm-repositories"
   main_repo: "http://helm.alexstorm.solenopsys.org"
 
-containers:
-  router:
-    name: installer
-    image: registry.alexstorm.solenopsys.org/alexstorm-hsm-installer
-    pullPolicy: Always
-    zmqPort: 9999
+container:
+  name: installer
+  image: registry.alexstorm.solenopsys.org/alexstorm-hsm-installer
+  serviceAccount: "hc-infra"
+  pullPolicy: Always
+  zmqPort: 9999

@@ -11,11 +11,14 @@ spec:
     metadata:
       labels:
         app: {{ .Values.selectorLabel }}
+        type: hStreamNode
+        hsServiceName: {{ .Values.fullName }}
     spec:
+      serviceAccountName: {{ .Values.container.serviceAccount }}
       containers:
-        - name:  {{ .Values.containers.router.name}}
-          image:  {{ .Values.containers.router.image}}
+        - name:  {{ .Values.container.name}}
+          image:  {{ .Values.container.image}}
           env:
             - name: zmq.SocketUrl
-              value: "tcp://*:{{ .Values.containers.router.zmqPort }}"
+              value: "tcp://*:{{ .Values.container.zmqPort }}"
 
