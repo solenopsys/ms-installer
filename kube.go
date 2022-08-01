@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -21,11 +20,11 @@ func getCubeConfig(devMode bool) (*rest.Config, error) {
 	if devMode {
 		var kubeconfigFile = os.Getenv("kubeconfigPath")
 		kubeConfigPath := filepath.Join(kubeconfigFile)
-		fmt.Printf("Using kubeconfig: %s\n", kubeConfigPath)
+		klog.Infof("Using kubeconfig: %s\n", kubeConfigPath)
 
 		kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
 		if err != nil {
-			fmt.Printf("error getting Kubernetes config: %v\n", err)
+			klog.Error("error getting Kubernetes config: %v\n", err)
 			os.Exit(1)
 		}
 
@@ -60,7 +59,7 @@ func loadReposFromKube() map[string]string {
 
 	configmap, err := clientSet.CoreV1().ConfigMaps(NameSpace).Get(context.Background(), ConfigmapName, metav1.GetOptions{})
 	if err != nil {
-		fmt.Printf("error get configmap: %v\n", err)
+		klog.Error("error get configmap: %v\n", err)
 	}
 
 	return configmap.Data
@@ -83,7 +82,7 @@ func saveReposToKube(repositories map[string]string) {
 
 	_, err := clientSet.CoreV1().ConfigMaps(NameSpace).Update(ctx, &configMap, metav1.UpdateOptions{})
 	if err != nil {
-		fmt.Printf("error saving configmap: %v\n", err)
+		klog.Error("error saving configmap: %v\n", err)
 	}
 }
 
@@ -96,7 +95,7 @@ func createChart(name string, repo string, version string) {
 		//"kind":       "HelmChart",
 		"metadata": map[string]interface{}{
 			"name":      name,
-			"namespace": "kube-system",
+			"namespace": "installers",
 		},
 		"spec": map[string]interface{}{
 			"chart":           name,
@@ -112,7 +111,7 @@ func createChart(name string, repo string, version string) {
 
 	err := c.Create(context.Background(), u)
 	if err != nil {
-		fmt.Printf("Error create helmchart: %v\n", err)
+		klog.Error("Error create helmchart: %v\n", err)
 	}
 
 }
