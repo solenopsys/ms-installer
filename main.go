@@ -15,7 +15,7 @@ const ConfigmapName = "helm-repositories"
 const NameSpace = "default"
 
 func main() {
-
 	clientSet, c = createKubeConfig()
-	zmq_connector.StartServer(processingFunction())
+	template := zmq_connector.HsTemplate{Pf: processingFunction()}
+	template.Init()
 }

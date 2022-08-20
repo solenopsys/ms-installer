@@ -153,8 +153,8 @@ func removeRepo(message []byte) []byte {
 	return marshal
 }
 
-func processingFunction() func(message []byte, streamId uint32, serviceId uint16, functionId uint16) []byte {
-	return func(message []byte, streamId uint32, serviceId uint16, functionId uint16) []byte {
+func processingFunction() func(message []byte, functionId uint8) []byte {
+	return func(message []byte, functionId uint8) []byte {
 		klog.Infof("Pocessing function %s", functionId)
 		if functionId == 1 {
 			return getRepos(message)
