@@ -1,6 +1,6 @@
 module hs-installer
 
-go 1.17
+go 1.19
 
 replace solenopsys.org/alexstorm/zmq_connector v0.0.0 => ./zmq_connector
 

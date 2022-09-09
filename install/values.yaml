@@ -2,10 +2,6 @@ replicasCount: 1
 fullName: "alexstorm-hsm-installer"
 selectorLabel: "alexstorm-hsm-installer"
 
-configmap:
-  name: "helm-repositories"
-  main_repo: "http://helm.alexstorm.solenopsys.org"
-
 container:
   name: installer
   image: registry.alexstorm.solenopsys.org/alexstorm-hsm-installer

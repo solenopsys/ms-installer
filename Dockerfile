@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-updFROM --platform=$BUILDPLATFORM  golang:1.19-buster
+FROM --platform=$BUILDPLATFORM  golang:1.19-buster
 
 ARG TARGETARCH
 

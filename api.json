@@ -3,38 +3,18 @@
   "name": "hs-installer-api",
   "proto": "api.proto",
   "methods": {
-    "getRepos": {
-      "fuc": 1,
-      "request": "GetReposRequest",
-      "response": "ReposResponse"
-    },
-    "addRepos": {
-      "fuc": 2,
-      "request": "AddRepoRequest",
-      "response": "OperationStatus"
-    },
-    "removeRepos": {
-      "fuc": 3,
-      "request": "RemoveRepoRequest",
-      "response": "OperationStatus"
-    },
-    "getCharts": {
-      "fuc": 4,
-      "request": "GetChartsRequest",
-      "response": "ChartsResponse"
-    },
     "getInstalled": {
-      "fuc": 5,
+      "fuc": 1,
       "request": "GetInstalledRequest",
       "response": "ChartsResponse"
     },
     "installChart": {
-      "fuc": 6,
+      "fuc": 2,
       "request": "InstallChartRequest",
       "response": "OperationStatus"
     },
     "uninstallChart": {
-      "fuc": 7,
+      "fuc": 3,
       "request": "UninstallChartRequest",
       "response": "OperationStatus"
     }
