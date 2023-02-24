@@ -1,15 +1,10 @@
 package main
 
 import (
-	"context"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/kubernetes"
+	_ "github.com/k3s-io/helm-controller/pkg/apis/helm.cattle.io/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog/v2"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	"os"
 	"path/filepath"
 )
@@ -37,47 +32,3 @@ func getCubeConfig(devMode bool) (*rest.Config, error) {
 	}
 }
 
-func createKubeConfig() (*kubernetes.Clientset, client.Client) {
-	config, err := getCubeConfig(devMode)
-	if err != nil {
-		klog.Info("Config init error...", err)
-		os.Exit(1)
-	}
-	forConfig, err := kubernetes.NewForConfig(config)
-	c, _ := client.New(config, client.Options{})
-	if err != nil {
-		klog.Info("Config init error...", err)
-		os.Exit(1)
-	}
-	return forConfig, c
-}
-
-func createChart(name string, repo string, version string) {
-	println("create chart " + name + "  " + repo + "  " + version)
-
-	u := &unstructured.Unstructured{}
-	u.Object = map[string]interface{}{
-		//"apiVersion": "helm.cattle.io/v1",
-		//"kind":       "HelmChart",
-		"metadata": map[string]interface{}{
-			"name":      name,
-			"namespace": "installers",
-		},
-		"spec": map[string]interface{}{
-			"chart":           name,
-			"targetNamespace": "default",
-			"repo":            repo,
-			"version":         version,
-		},
-	}
-	u.SetGroupVersionKind(schema.GroupVersionKind{
-		Kind:    "HelmChart",
-		Version: "helm.cattle.io/v1",
-	})
-
-	err := c.Create(context.Background(), u)
-	if err != nil {
-		klog.Error("Error create helmchart: %v\n", err)
-	}
-
-}

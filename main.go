@@ -1,21 +1,25 @@
 package main
 
 import (
-	"k8s.io/client-go/kubernetes"
+	"git.alexstorm.solenopsys.org/zmq_connector"
+	"k8s.io/client-go/rest"
 	"os"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"solenopsys.org/alexstorm/zmq_connector"
 )
 
-var clientSet *kubernetes.Clientset
-var c client.Client
+var restClient *rest.Config
+
 var devMode = os.Getenv("developerMode") == "true"
 
 const ConfigmapName = "helm-repositories"
 const NameSpace = "default"
 
 func main() {
-	clientSet, c = createKubeConfig()
+	var err error
+	restClient, err = getCubeConfig(devMode)
+	if err != nil {
+		klog.Error("error getting Kubernetes config:", err)
+		os.Exit(1)
+	}
 	template := zmq_connector.HsTemplate{Pf: processingFunction()}
 	template.Init()
 }

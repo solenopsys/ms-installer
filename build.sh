@@ -14,7 +14,7 @@ helm_build_push(){
 REGISTRY=registry.alexstorm.solenopsys.org
 NAME=alexstorm-hsm-installer
 ARCHS="linux/amd64,linux/arm64"
-VER=0.1.8
+VER=0.1.9
 
 
 helm_build_push
