@@ -2,7 +2,7 @@ apiVersion: v2
 name: alexstorm-hsm-installer
 version: 0.1.9
 description: Installer hStreams
-icon: "http://alexstorm.solenopsys.org/apps/assets/alexstorm-hsm-installer.svg"
+icon: "http://klogsolenopsys.org/apps/assets/alexstorm-hsm-installer.svg"
 appVersion: 1.0.0
 
 

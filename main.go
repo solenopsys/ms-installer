@@ -1,7 +1,7 @@
 package main
 
 import (
-	"git.alexstorm.solenopsys.org/zmq_connector"
+	"git.klogsolenopsys.org/zmq_connector"
 	"k8s.io/client-go/rest"
 	"os"
 )

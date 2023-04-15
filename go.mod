@@ -11,7 +11,7 @@ require (
 	k8s.io/client-go v0.24.3
 	k8s.io/klog/v2 v2.70.1
 	sigs.k8s.io/controller-runtime v0.12.3
-	git.alexstorm.solenopsys.org/zmq_connector v0.0.0
+	git.klogsolenopsys.org/zmq_connector v0.0.0
 )
 
 require (
