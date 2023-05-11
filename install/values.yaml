@@ -4,7 +4,7 @@ selectorLabel: "alexstorm-hsm-installer"
 
 container:
   name: installer
-  image: registry.klogsolenopsys.org/alexstorm-hsm-installer
+  image: registry.solenopsys.org/alexstorm-hsm-installer
   serviceAccount: "hc-infra"
   pullPolicy: Always
   zmqPort: 9999

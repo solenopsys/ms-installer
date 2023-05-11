@@ -1,17 +1,17 @@
 #!/bin/sh
 
 build_push(){
-  docker buildx build  --platform ${ARCHS} -t ${REGISTRY}/${NAME}:latest  --output=type=registry,registry.insecure=true --push .
+  nerdctl build --platform=${ARCHS} --output type=image,name=${REGISTRY}/${NAME}:latest,push=true .
 }
 
 helm_build_push(){
   FN=${NAME}-${VER}.tgz
   helm package ./install --version ${VER}
-  curl --data-binary "@${FN}" http://helm.klogsolenopsys.org/api/charts
+  curl --data-binary "@${FN}" http://helm.solenopsys.org/api/charts
   rm ${FN}
 }
 
-REGISTRY=registry.klogsolenopsys.org
+REGISTRY=registry.solenopsys.org
 NAME=alexstorm-hsm-installer
 ARCHS="linux/amd64,linux/arm64"
 VER=0.1.9
