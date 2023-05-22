@@ -1,3 +1,0 @@
-[submodule "zmq_connector"]
-	path = zmq_connector
-	url = http://git.solenopsys.org/zmq_connector

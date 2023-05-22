@@ -1,3 +1,5 @@
+# ms-installer module
+
 # proto gen
 protoc --proto_path=. --go_out=.  api.proto
 
