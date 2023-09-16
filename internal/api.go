@@ -1,16 +1,19 @@
-package main
+package internal
 
 import (
+	bl_kubernetes_tools "github.com/solenopsys/bl-kubernetes-tools"
 	"google.golang.org/protobuf/proto"
+	"hs-installer/pkg"
+	"k8s.io/client-go/rest"
 	"k8s.io/klog/v2"
 )
 
 type RequestProcessor struct {
-	helmApi *HelmApi
+	helmApi *pkg.HelmApi
 }
 
 func (r *RequestProcessor) getInstalled(message []byte) []byte {
-	req := &GetChartsRequest{}
+	req := &pkg.GetChartsRequest{}
 	proto.Unmarshal(message, req)
 
 	chartsList, err := r.helmApi.ListHelmCharts("")
@@ -18,10 +21,10 @@ func (r *RequestProcessor) getInstalled(message []byte) []byte {
 		klog.Infof("Error get list charts: %s", err)
 	}
 
-	var charts = make([]*Chart, 0)
+	var charts = make([]*pkg.Chart, 0)
 
 	for _, chart := range chartsList.Items {
-		charts = append(charts, &Chart{
+		charts = append(charts, &pkg.Chart{
 			Name:       chart.ObjectMeta.Name,
 			Digest:     string(chart.ObjectMeta.UID),
 			Repository: chart.Spec.Repo,
@@ -32,7 +35,7 @@ func (r *RequestProcessor) getInstalled(message []byte) []byte {
 
 	klog.Infof("RETURN CHARTS %s", charts)
 
-	res := &ChartsResponse{Charts: charts}
+	res := &pkg.ChartsResponse{Charts: charts}
 	marshal, err := proto.Marshal(res)
 
 	if err != nil {
@@ -42,7 +45,7 @@ func (r *RequestProcessor) getInstalled(message []byte) []byte {
 }
 
 func (r *RequestProcessor) installChart(message []byte) []byte {
-	req := &InstallChartRequest{}
+	req := &pkg.InstallChartRequest{}
 	proto.Unmarshal(message, req)
 
 	chart := req.Chart
@@ -50,7 +53,7 @@ func (r *RequestProcessor) installChart(message []byte) []byte {
 
 	klog.Infof("INSTALL CHART %s", chart)
 
-	res := &OperationStatus{Status: "CHART_CREATED"}
+	res := &pkg.OperationStatus{Status: "CHART_CREATED"}
 	marshal, err := proto.Marshal(res)
 
 	if err != nil {
@@ -60,14 +63,14 @@ func (r *RequestProcessor) installChart(message []byte) []byte {
 }
 
 func (r *RequestProcessor) uninstallChart(message []byte) []byte {
-	req := &UninstallChartRequest{}
+	req := &pkg.UninstallChartRequest{}
 	proto.Unmarshal(message, req)
 
 	r.helmApi.DeleteHelmChart(req.Digest)
 
 	klog.Infof("UNINSTALL CHART %s", req.Digest)
 
-	res := &OperationStatus{Status: "CHART_DELETED"}
+	res := &pkg.OperationStatus{Status: "CHART_DELETED"}
 	marshal, err := proto.Marshal(res)
 
 	if err != nil {
@@ -76,8 +79,16 @@ func (r *RequestProcessor) uninstallChart(message []byte) []byte {
 	return marshal
 }
 
-func processingFunction() func(message []byte, functionId uint8) []byte {
-	helmApi := NewAPI(restClient)
+func ProcessingFunction() func(message []byte, functionId uint8) []byte {
+
+	var rc *rest.Config
+	var err error
+	rc, err = bl_kubernetes_tools.GetCubeConfig(false)
+	if err != nil {
+		klog.Error("error getting Kubernetes config:", err)
+	}
+
+	helmApi := pkg.NewAPI(rc)
 	requestProcessor := RequestProcessor{helmApi: &helmApi}
 	return func(message []byte, functionId uint8) []byte {
 		klog.Infof("Pocessing function %s", functionId)
